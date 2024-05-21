@@ -3,52 +3,42 @@ import '../App.css'
 import Axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const ForgotPassword = () => {
 
-    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
 
     const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        Axios.post('http://localhost:3000/auth/signup', {
-            username,
+        Axios.post('http://localhost:3000/auth/forgot-password', {
             email,
-            password
         }).then(reponse => {
             if (reponse.data.status) {
+                alert("chek you email for reset password link")
                 navigate('/login')
             }
-
+           
         }).catch(err => {
             console.log(err)
         })
     }
 
     return (
-
         <div className="sign-up-container">
 
             <form className="sign-up-form" onSubmit={handleSubmit}>
-                <h2>Sign Up</h2>
-
-                <label htmlFor="username">Username: </label>
-                <input type="text" id="username" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                <h2>Forgot Password</h2>
 
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" autoComplete="off" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
 
-                <label htmlFor="password">Password: </label>
-                <input type="password" id="password" placeholder="*******" onChange={(e) => setPassword(e.target.value)} />
 
-                <button type="submit">Sign Up</button>
-                <p>Have an Account ? <Link to="/login">Login</Link></p> 
+                <button type="submit">Send</button>
 
             </form>
         </div>
     )
 }
 
-export default Signup;
+export default ForgotPassword

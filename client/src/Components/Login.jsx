@@ -18,7 +18,7 @@ const Login = () => {
             password
         }).then(reponse => {
             if (reponse.data.status) {
-                navigate('/home')
+                navigate('/')
             }
 
         }).catch(err => {
@@ -35,13 +35,15 @@ const Login = () => {
 
 
                 <label htmlFor="email">Email:</label>
-                <input type="email" autoComplete="off" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+                <input type="email" id="email"  autoComplete="off" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
 
                 <label htmlFor="password">Password: </label>
-                <input type="password" placeholder="*******" onChange={(e) => setPassword(e.target.value)} />
+                <input type="password" id="password" placeholder="*******" onChange={(e) => setPassword(e.target.value)} />
 
                 <button type="submit">Login</button>
+                <Link to="/forgotPassword">Forgot Password?</Link>
                 <p>Don't have Account ? <Link to="/signup">Sign up</Link></p> 
+                
 
             </form>
         </div>

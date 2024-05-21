@@ -5,41 +5,85 @@ import { User } from '../models/User.js';
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 
+
 router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (user) {
-        return req.json({ message: "user already existed" })
+        return res.json({ message: "User already exists" });
     }
 
-    const hashpassword = await bcrypt.hash(password, 10)
+    const hashpassword = await bcrypt.hash(password, 10);
     const newUser = new User({
         username,
         email,
         password: hashpassword,
-    })
+        isVerified: false // Add a field to check if the user is verified
+    });
 
-    await newUser.save()
-    return res.json({ status: true, amessage: "record registed" })
+    const savedUser = await newUser.save();
+    const token = jwt.sign({ id: savedUser._id }, process.env.KEY, { expiresIn: '1d' });
 
-})
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'cheerscompass51@gmail.com',
+            pass: 'nyszysqfaofozqzv'
+        }
+    });
+
+    const mailOptions = {
+        from: 'cheerscompass51@gmail.com',
+        to: email,
+        subject: 'Email Verification',
+        text: `Please verify your email by clicking the following link: http://localhost:5173/verifyEmail/${token}`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            return res.json({ message: "Error sending email" });
+        } else {
+            return res.json({ status: true, message: "Verification email sent" });
+        }
+    });
+});
+
+router.post('/verify-email/:token', async (req, res) => {
+    const { token } = req.params;
+    try {
+        const decoded = jwt.verify(token, process.env.KEY);
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.json({ message: "User not found" });
+        }
+        user.isVerified = true;
+        await user.save();
+        return res.json({ status: true, message: "Email verified successfully" });
+    } catch (err) {
+        return res.json({ message: "Invalid or expired token" });
+    }
+});
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) {
-        return res.json({ message: "user is not registered" })
+        return res.json({ message: "User is not registered" });
     }
 
-    const validPassword = await bcrypt.compare(password, user.password)
+    if (!user.isVerified) {
+        return res.json({ message: "Email is not verified" });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-        return res.json({ message: "password is incorrect" })
+        return res.json({ message: "Password is incorrect" });
     }
 
-    const token = jwt.sign({ username: user.username }, process.env.KEY, { expiresIn: '1h' })
-    res.cookie('token', token, { httpOnly: true, maxAge: 360000 })
-    return res.json({ status: true, message: "login sucessfully" })
-})
+    const token = jwt.sign({ username: user.username }, process.env.KEY, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 360000 });
+    return res.json({ status: true, message: "Login successfully" });
+});
 
 router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
