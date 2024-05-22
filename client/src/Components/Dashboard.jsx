@@ -17,7 +17,7 @@ export const Dashboard = () => {
         })
     },[])
   return (
-    <div>Dashboard</div>
+    <div className="text-3xl font-bold underline" >Dashboard</div>
   )
 }
 
