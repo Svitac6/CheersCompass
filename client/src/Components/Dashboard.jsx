@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import Navbar from './Navbar';
 
 export const Dashboard = () => {
     const navigate = useNavigate();
@@ -17,7 +18,9 @@ export const Dashboard = () => {
         })
     },[])
   return (
-    <div className="text-3xl font-bold underline" >Dashboard</div>
+    <div className="Home">
+            <Navbar />
+    </div>
   )
 }
 
