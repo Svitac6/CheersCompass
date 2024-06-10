@@ -7,6 +7,7 @@ import ResetPassword from './Components/ResetPassword'
 import Dashboard from './Components/Dashboard'
 import VerifyEmail from './Components/VerifyEmail'
 import Profile from './Components/Profile'
+import Info from './Components/Info'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} ></Route>
         <Route path="/verifyEmail/:token" element={<VerifyEmail/>} ></Route>
         <Route path="/profil" element={<Profile/>} ></Route>
+        <Route path="/info" element={<Info/>} ></Route>
       </Routes>
     </BrowserRouter>
 
