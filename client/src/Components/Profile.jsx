@@ -1,34 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaArrowLeft } from 'react-icons/fa'
+import { FaArrowLeft } from 'react-icons/fa';
 
 const Profil = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
-
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        Axios.post('http://localhost:3000/auth/forgot-password', {
+        e.preventDefault();
+        axios.post('http://localhost:3000/auth/forgot-password', {
             email,
-        }).then(reponse => {
-            if (reponse.data.status) {
-                alert("chek you email for reset password link")
-                navigate('/login')
+        }).then(response => {
+            if (response.data.status) {
+                alert("Check your email for reset password link");
+                navigate('/login');
             }
-
         }).catch(err => {
-            console.log(err)
-        })
-    }
+            console.log(err);
+        });
+    };
 
     useEffect(() => {
         axios.get('http://localhost:3000/auth/profile', { withCredentials: true })
             .then(res => {
                 if (res.data.status) {
                     setUserData(res.data.data);
+                    setEmail(res.data.data.email); // Set email state with fetched email
+                    
                 } else {
                     console.log(res.data.message); // Debugging
                     navigate('/');
@@ -40,11 +41,24 @@ const Profil = () => {
             });
     }, [navigate]);
 
-
+    useEffect(() => {
+        axios.get('http://localhost:3000/auth/isAdmin', { withCredentials: true })
+            .then(res => {
+                if (res.data.status) {
+                    setIsAdmin(res.data.data.isAdmin);
+                    
+                } else {
+                    console.log(res.data.message); // Debugging
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching admin status:", error);
+                navigate('/');
+            });
+    }, [navigate]);
 
     return (
         <div className="relative w-full h-screen">
-
             <div className="absolute top-4 left-4 z-20">
                 <Link to="/">
                     <FaArrowLeft className="text-black text-2xl" />
@@ -62,7 +76,7 @@ const Profil = () => {
                             <h2>Email: {userData.email}</h2>
                         </div>
                     ) : (
-                        <p className="text-center text-gray-700">Loading user data...</p> // Message de chargement
+                        <p className="text-center text-gray-700">Loading user data...</p>
                     )}
                 </div>
                 <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8 mt-5">
@@ -75,8 +89,9 @@ const Profil = () => {
                                 id="email"
                                 autoComplete="off"
                                 placeholder="Email"
+                                value={email}
+                                readOnly
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500 sm:text-sm"
-                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <button
@@ -89,8 +104,6 @@ const Profil = () => {
                 </div>
             </div>
         </div>
-
-
     );
 };
 

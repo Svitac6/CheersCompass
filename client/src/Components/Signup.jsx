@@ -29,6 +29,8 @@ const Signup = () => {
         })
     }
 
+    
+
     return (
         <div className="relative w-full h-screen">
             <video className="absolute inset-0 w-full h-full object-cover" src={videoBg} autoPlay loop muted />

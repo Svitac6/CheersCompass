@@ -8,6 +8,8 @@ import Dashboard from './Components/Dashboard'
 import VerifyEmail from './Components/VerifyEmail'
 import Profile from './Components/Profile'
 import Info from './Components/Info'
+import Logs from './Components/Logs'
+
 
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
         <Route path="/verifyEmail/:token" element={<VerifyEmail/>} ></Route>
         <Route path="/profil" element={<Profile/>} ></Route>
         <Route path="/info" element={<Info/>} ></Route>
+        <Route path="/logs" element={<Logs/>}></Route>
       </Routes>
     </BrowserRouter>
 
