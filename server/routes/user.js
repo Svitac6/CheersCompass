@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.KEY, { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true, maxAge: 360000 });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
     return res.json({ status: true, message: "Login successfully" });
 });
 
@@ -171,5 +171,50 @@ router.get('/profile', verifyUser, async (req, res) => {
         return res.json({ status: false, message: "Error fetching user data" });
     }
 });
+router.get('/isAdmin', verifyUser, async (req, res) => {
+    try {
+        const { id } = req.user; // Extract user ID from decoded token
+        const user = await User.findById(id);
+        if (!user) {
+            return res.json({ status: false, message: "User not found" });
+        }
+        const { isAdmin } = user;
+        return res.json({ status: true, data: { isAdmin } });
+    } catch (err) {
+        return res.json({ status: false, message: "Error fetching user data" });
+    }
+});
+
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find();
+        if (!users) {
+            return res.json({ status: false, message: "No users found" });
+        }
+        const usersData = users.map(user => {
+            const { _id, username, email, isVerified, isAdmin } = user;
+            return { _id, username, email, isVerified, isAdmin };
+        });
+        return res.json({ status: true, data: usersData });
+    } catch (err) {
+        return res.json({ status: false, message: "Error fetching users data" });
+    }
+});
+
+//dangerous function for haters
+router.delete('/deleteUser/:id', async (req, res) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.json({ status: false, message: "User not found" });
+        }
+        await User.findByIdAndDelete(userId);
+        return res.json({ status: true, message: "User deleted successfully" });
+    } catch (err) {
+        return res.json({ status: false, message: "Error deleting user" });
+    }
+});
+
 
 export { router as UserRouter };
