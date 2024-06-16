@@ -9,6 +9,8 @@ import VerifyEmail from './Components/VerifyEmail'
 import Profile from './Components/Profile'
 import Info from './Components/Info'
 import Logs from './Components/Logs'
+import Bar_management from './Components/Bar_management'
+
 
 
 
@@ -29,6 +31,7 @@ function App() {
         <Route path="/profil" element={<Profile/>} ></Route>
         <Route path="/info" element={<Info/>} ></Route>
         <Route path="/logs" element={<Logs/>}></Route>
+        <Route path='/bar_manage' element={<Bar_management/>}></Route>
       </Routes>
     </BrowserRouter>
 

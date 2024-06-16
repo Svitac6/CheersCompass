@@ -85,6 +85,9 @@ const Navbar = () => {
                             {isLoggedIn && isAdmin && (
                                 <Link to="/logs" className="text-white hover:bg-yellow-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logs</Link>
                             )}
+                            {isLoggedIn && isAdmin && (
+                                <Link to="/bar_manage" className="text-white hover:bg-yellow-700 px-3 py-2 rounded-md text-sm font-medium">bar manage</Link>
+                            )}
                         </div>
                     </div>
                     <div className="flex items-center">
@@ -119,9 +122,15 @@ const Navbar = () => {
                     <Link to="/" className="text-white hover:bg-yellow-700  px-3 py-2 rounded-md text-sm font-medium">Home</Link>
                     <Link to="/dashboard" className="text-white hover:bg-yellow-700 px-3 py-2 rounded-md text-sm font-medium">Favorite Bar</Link>
                     <Link to="/info" className="text-white hover:bg-yellow-700  px-3 py-2 rounded-md text-sm font-medium">Info</Link>
+
                     {isLoggedIn && isAdmin && (
                         <Link to="/logs" className="text-white hover:bg-yellow-700 px-3 py-2 rounded-md text-sm font-medium">Logs</Link>
                     )}
+                    {isLoggedIn && isAdmin && (
+                        <Link to="/bar_manage" className="text-white hover:bg-yellow-700 px-3 py-2 rounded-md text-sm font-medium">bar_manage</Link>
+                    )}
+
+
                 </div>
             </div>
         </nav>
