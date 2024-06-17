@@ -38,7 +38,7 @@ const VerifyEmail = () => {
 
                 <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
                     <form className="sign-up-form" onSubmit={handleSubmit}>
-                        <h2 className="text-2xl font-semibold mb-6 text-center">The email has been verified :)</h2>
+                        <h2 className="text-2xl font-semibold mb-6 text-center">The email has been verified </h2>
                         <p></p>
 
                         <button

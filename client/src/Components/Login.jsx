@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import '../App.css'
 import Axios from 'axios'
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import videoBg from '../assets/test.mp4';
 import icone from '../assets/icone.png'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
@@ -11,22 +13,33 @@ const Login = () => {
     const [password, setPassword] = useState('')
 
     const navigate = useNavigate()
+    const location = useLocation()
 
-    Axios.defaults.withCredentials = true;
+    useEffect(() => {
+        
+        if (location.state?.signupSuccess) {
+            toast.info("Please check your email to verify your account");
+        }
+    }, [location.state]);
+
+   
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         Axios.post('http://localhost:3000/auth/login', {
             email,
             password
-        }).then(reponse => {
-            if (reponse.data.status) {
-                navigate('/')
+        }).then(response => {
+            if (response.data.status) {
+                navigate('/');
             }
-
+            else{
+                toast.error("Failed connection. Please verify your credentials.");
+            }
         }).catch(err => {
-            console.log(err)
-        })
-    }
+            console.log(err);
+            toast.error("Failed connection. Please verify your credentials.");
+        });
+    };
 
     return (
         <div className="relative w-full h-screen">
@@ -80,6 +93,7 @@ const Login = () => {
                     </form>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

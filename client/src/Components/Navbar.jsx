@@ -97,10 +97,14 @@ const Navbar = () => {
                                     <img className="h-8 w-8 rounded-full" src="https://via.placeholder.com/150" alt="User Profile" />
                                 </button>
                                 {isProfileMenuOpen && (
-                                    <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
-                                        <Link to="/profil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile {isAdmin && <span className="text-xs text-gray-400">(Admin)</span>}</Link>
-                                        <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                        <a onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Sign out</a>
+                                    <div className="relative">
+                                        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                            <Link to="/profil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                Profile {isAdmin && <span className="text-xs text-gray-400">(Admin)</span>}
+                                            </Link>
+                                            <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                            <a onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Sign out</a>
+                                        </div>
                                     </div>
                                 )}
                             </div>

@@ -139,9 +139,6 @@ const Bar_management = () => {
         }
     };
 
-
-
-
     if (!isLoggedIn || !isAdmin) {
         return "Erreur 401 - Unauthorized";
     }

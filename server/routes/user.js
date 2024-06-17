@@ -7,45 +7,65 @@ import { User } from '../models/User.js';
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
-    const { username, email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (user) {
-        return res.json({ message: "User already exists" });
+    try {
+        const { username, email, password } = req.body;
+
+        // Vérifier si l'utilisateur existe déjà
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.json({ message: "User already exists" });
+        }
+
+        // Hachage du mot de passe
+        const hashpassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            username,
+            email,
+            password: hashpassword,
+            isVerified: false // Ajouter un champ pour vérifier si l'utilisateur est vérifié
+        });
+
+        // Sauvegarder le nouvel utilisateur dans la base de données
+        const savedUser = await newUser.save();
+
+        // Générer un token JWT
+        const token = jwt.sign(
+            { id: savedUser._id, username: savedUser.username },
+            process.env.KEY,
+            { expiresIn: '1d' }
+        );
+
+        // Configurer le transporteur d'email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        // Définir les options de l'email
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Email Verification',
+            text: `Please verify your email by clicking the following link: http://localhost:5173/verifyEmail/${token}`
+        };
+
+        // Envoyer l'email
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.error('Error sending email:', error);
+                return res.json({ message: "Error sending email" });
+            } else {
+                console.log('Email sent:', info.response);
+                return res.json({ status: true, message: "Verification email sent" });
+            }
+        });
+    } catch (err) {
+        console.error('Signup error:', err);
+        return res.json({ message: "Signup failed" });
     }
-
-    const hashpassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-        username,
-        email,
-        password: hashpassword,
-        isVerified: false // Add a field to check if the user is verified
-    });
-
-    const savedUser = await newUser.save();
-    const token = jwt.sign({ id: savedUser._id, username: savedUser.username }, process.env.KEY, { expiresIn: '1d' });
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'cheerscompass51@gmail.com',
-            pass: 'nyszysqfaofozqzv'
-        }
-    });
-
-    const mailOptions = {
-        from: 'cheerscompass51@gmail.com',
-        to: email,
-        subject: 'Email Verification',
-        text: `Please verify your email by clicking the following link: http://localhost:5173/verifyEmail/${token}`
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            return res.json({ message: "Error sending email" });
-        } else {
-            return res.json({ status: true, message: "Verification email sent" });
-        }
-    });
 });
 
 router.post('/verify-email/:token', async (req, res) => {
@@ -63,6 +83,7 @@ router.post('/verify-email/:token', async (req, res) => {
         return res.json({ message: "Invalid or expired token" });
     }
 });
+
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
