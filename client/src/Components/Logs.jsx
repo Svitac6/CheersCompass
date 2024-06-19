@@ -67,20 +67,20 @@ export const Logs = () => {
                 password: password // Assuming you are sending the password to confirm the deletion
             }
         })
-        .then(response => {
-            if (response.data.status) {
-                // After successful deletion, you might want to update the user data
-                setUserData(userData.filter(user => user._id !== userId));
-                console.log("User deleted successfully");
-                toast.success("User deleted successfully"); // Displaying toast
-            }
-            console.log(response.data);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+            .then(response => {
+                if (response.data.status) {
+                    // After successful deletion, you might want to update the user data
+                    setUserData(userData.filter(user => user._id !== userId));
+                    console.log("User deleted successfully");
+                    toast.success("User deleted successfully"); // Displaying toast
+                }
+                console.log(response.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     };
-    
+
 
     if (!isLoggedIn || !isAdmin) {
         return "Erreur 401 - Unauthorized";
@@ -88,48 +88,48 @@ export const Logs = () => {
 
     return (
         <div>
-        <div className="relative w-full min-h-screen bg-gray-100 ">
+            <div className="relative w-full min-h-screen bg-gray-100 ">
 
-            <Navbar />
-            <ToastContainer /> {/* Toast container */}
-            {isAdmin && (
-                <div className="container mx-auto py-8">
-                    <h2 className="text-2xl font-bold mb-4">Users</h2>
-                    <div className="overflow-x-auto">
-                        <table className="table-auto w-full border-collapse border border-gray-800">
-                            <thead>
-                                <tr className="bg-gray-200">
-                                    <th className="border border-gray-800 px-4 py-2">User ID</th>
-                                    <th className="border border-gray-800 px-4 py-2">Username</th>
-                                    <th className="border border-gray-800 px-4 py-2">Email</th>
-                                    <th className="border border-gray-800 px-4 py-2">Verified</th>
-                                    <th className="border border-gray-800 px-4 py-2">Admin</th>
-                                    <th className="border border-gray-800 px-4 py-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {userData.map(user => (
-                                    <tr key={user._id} className="text-gray-700">
-                                        <td className="border border-gray-800 px-4 py-2">{user._id}</td>
-                                        <td className="border border-gray-800 px-4 py-2">{user.username}</td>
-                                        <td className="border border-gray-800 px-4 py-2">{user.email}</td>
-                                        <td className="border border-gray-800 px-4 py-2">{user.isVerified ? 'Yes' : 'No'}</td>
-                                        <td className="border border-gray-800 px-4 py-2">{user.isAdmin ? 'Yes' : 'No'}</td>
-                                        <td className="border border-gray-800 px-4 py-2">
-                                            <button onClick={() => handleDeleteUser(user._id)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                                        </td>
+                <Navbar />
+                <ToastContainer /> {/* Toast container */}
+                {isAdmin && (
+                    <div className="container mx-auto py-8">
+                        <h2 className="text-2xl font-bold mb-4">Users</h2>
+                        <div className="overflow-x-auto">
+                            <table className="table-auto w-full border-collapse border border-gray-800">
+                                <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="border border-gray-800 px-4 py-2">User ID</th>
+                                        <th className="border border-gray-800 px-4 py-2">Username</th>
+                                        <th className="border border-gray-800 px-4 py-2">Email</th>
+                                        <th className="border border-gray-800 px-4 py-2">Verified</th>
+                                        <th className="border border-gray-800 px-4 py-2">Admin</th>
+                                        <th className="border border-gray-800 px-4 py-2">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {userData.map(user => (
+                                        <tr key={user._id} className="text-gray-700">
+                                            <td className="border border-gray-800 px-4 py-2">{user._id}</td>
+                                            <td className="border border-gray-800 px-4 py-2">{user.username}</td>
+                                            <td className="border border-gray-800 px-4 py-2">{user.email}</td>
+                                            <td className="border border-gray-800 px-4 py-2">{user.isVerified ? 'Yes' : 'No'}</td>
+                                            <td className="border border-gray-800 px-4 py-2">{user.isAdmin ? 'Yes' : 'No'}</td>
+                                            <td className="border border-gray-800 px-4 py-2">
+                                                <button onClick={() => handleDeleteUser(user._id)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
-                    
-                </div>
-                
-            )}
-             
-        </div>
-        <Footer />
+
+                )}
+
+            </div>
+            <Footer />
         </div>
     );
 };
