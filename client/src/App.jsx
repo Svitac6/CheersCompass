@@ -11,10 +11,9 @@ import Info from './Components/Info'
 import Logs from './Components/Logs'
 import Bar_management from './Components/Bar_management'
 
-
-
-
 function App() {
+
+  
 
 
   return (

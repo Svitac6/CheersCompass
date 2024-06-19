@@ -186,8 +186,8 @@ router.get('/profile', verifyUser, async (req, res) => {
         if (!user) {
             return res.json({ status: false, message: "User not found" });
         }
-        const { username, email } = user;
-        return res.json({ status: true, data: { username, email } });
+        const { _id,username, email } = user;
+        return res.json({ status: true, data: { _id,username, email } });
     } catch (err) {
         return res.json({ status: false, message: "Error fetching user data" });
     }

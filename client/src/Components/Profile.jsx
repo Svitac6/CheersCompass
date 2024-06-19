@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaArrowLeft } from 'react-icons/fa';
+import Footer from './Footer';
 
 const Profil = () => {
     const navigate = useNavigate();
@@ -122,6 +123,7 @@ const Profil = () => {
                     </form>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

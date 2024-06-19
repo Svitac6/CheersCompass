@@ -4,9 +4,9 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import fut from '../assets/fut.jpg';
-import { FaStar, FaRegHeart, FaTimes } from 'react-icons/fa'; // Importer FaTimes
+import { FaStar, FaRegHeart, FaTimes } from 'react-icons/fa';
 import Card from './Cards';
+import Footer from './Footer';
 
 const Bar_management = () => {
     const navigate = useNavigate();
@@ -15,13 +15,50 @@ const Bar_management = () => {
     const [newTag, setNewTag] = useState('');
     const [tags, setTags] = useState([]);
     const [name, setName] = useState('');
-    const [image, setImage] = useState('');
-    const [OpenHours, setOpenHours] = useState('');
-    const [CloseHours, setCloseHours] = useState('');
-    const [address, setAddress] = useState('');
+    const [image, setImage] = useState(null); 
     const [description, setDescription] = useState('');
     const [userData, setUserData] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [location, setLocation] = useState('');
+    const [openingHours, setOpeningHours] = useState('');
+    const [closingHours, setClosingHours] = useState('');
+    const [bars, setBars] = useState([]);
+
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/auth/profile', { withCredentials: true })
+            .then(res => {
+                if (res.data.status) {
+                    setUserData(res.data.data);
+
+                } else {
+                    console.log(res.data.message); // Debugging
+                    navigate('/');
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user data:", error);
+                navigate('/');
+            });
+    }, [navigate]);
+
+    const fetchBars = () => {
+        axios.get('http://localhost:3000/auth/bars')
+            .then(res => {
+                if (res.data.status) {
+                    setBars(res.data.data);
+                } else {
+                    console.error(res.data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching bars:', error);
+            });
+    };
+
+    useEffect(() => {
+        fetchBars();
+    }, []);
 
     const fetchTags = () => {
         axios.get('http://localhost:3000/auth/tags', {})
@@ -40,8 +77,6 @@ const Bar_management = () => {
     useEffect(() => {
         fetchTags();
     }, []);
-
-
 
     useEffect(() => {
         axios.get('http://localhost:3000/auth/verify')
@@ -74,21 +109,6 @@ const Bar_management = () => {
             });
     }, []);
 
-    useEffect(() => {
-        axios.get('http://localhost:3000/auth/users', { withCredentials: true })
-            .then(res => {
-                if (res.data.status) {
-                    setUserData(res.data.data);
-                } else {
-                    console.log(res.data.message); // Debugging
-                    navigate('/');
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching user data:", error);
-                navigate('/');
-            });
-    }, [navigate]);
 
 
     const handleSubmit = (e) => {
@@ -100,17 +120,17 @@ const Bar_management = () => {
                 toast.success("Tag add successfully"); // Afficher la réponse du serveur
                 setNewTag(''); // Effacer le champ de saisie
                 fetchTags();
-
             } else {
                 toast.error('Failed to add tag');
             }
-
         })
             .catch(err => {
                 console.error(err);
                 toast.error('An error occurred while adding the tag');
             });
     }
+
+
 
     const handleDeleteTag = (tagId) => {
         axios.delete(`http://localhost:3000/auth/delete_tag/${tagId}`, {
@@ -123,20 +143,66 @@ const Bar_management = () => {
                     toast.success("Tag delete successfully");
                     fetchTags();
                 }
-
-
             })
             .catch(err => {
                 console.log(err);
             });
     };
+
     const handleTagsChange = (e) => {
-        const { value, checked } = e.target;
-        if (checked) {
-            setSelectedTags([...selectedTags, value]);
-        } else {
-            setSelectedTags(selectedTags.filter(tagId => tagId !== value));
+        const value = e.target.value;
+        setSelectedTags(prev =>
+            prev.includes(value) ? prev.filter(tag => tag !== value) : [...prev, value]
+        );
+    };
+
+    const handleDeleteBar = (barId) => {
+        axios.delete(`http://localhost:3000/auth/delete_bar/${barId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    toast.success('Bar deleted successfully');
+                    fetchBars();
+                } else {
+                    toast.error('Failed to delete bar');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting bar:', error);
+                toast.error('Failed to delete bar');
+            });
+    };
+
+
+
+    const handleSubmitBar = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('location', location);
+        formData.append('description', description);
+        formData.append('types', JSON.stringify(selectedTags));
+        formData.append('opening_hours', openingHours);
+        formData.append('closing_hours', closingHours);
+        if (image) {
+            formData.append('image', image);
         }
+
+        axios.post('http://localhost:3000/auth/add_bar', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(response => {
+                console.log('Bar added successfully:', response.data);
+                fetchBars();
+                toast.success("Barr add successfully");
+
+
+            })
+            .catch(error => {
+                console.error('Error adding bar:', error);
+                toast.error('Failed to add bar');
+            });
     };
 
     if (!isLoggedIn || !isAdmin) {
@@ -176,7 +242,7 @@ const Bar_management = () => {
                     </ul>
                 </div>
 
-                <form className="p-4 bg-white rounded shadow-md mt-4  max-w-lg mx-auto">
+                <form className="p-4 bg-white rounded shadow-md mt-4 max-w-lg mx-auto" onSubmit={handleSubmitBar}>
                     <h2 className="text-lg font-semibold mb-4">Add a Bar</h2>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
@@ -189,10 +255,15 @@ const Bar_management = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
-                        <input type="file" />
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Location:</label>
+                        <input
+                            type="text"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="border rounded-md px-3 py-2 w-full"
+                            required
+                        />
                     </div>
-
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Tags:</label>
                         <div className="flex flex-wrap">
@@ -214,8 +285,8 @@ const Bar_management = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">Open Hours:</label>
                         <input
                             type="text"
-                            value={OpenHours}
-                            onChange={(e) => setOpenHours(e.target.value)}
+                            value={openingHours}
+                            onChange={(e) => setOpeningHours(e.target.value)}
                             className="border rounded-md px-3 py-2 w-full"
                             required
                         />
@@ -224,18 +295,8 @@ const Bar_management = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2">Close Hours:</label>
                         <input
                             type="text"
-                            value={CloseHours}
-                            onChange={(e) => setCloseHours(e.target.value)}
-                            className="border rounded-md px-3 py-2 w-full"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Address:</label>
-                        <input
-                            type="text"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={closingHours}
+                            onChange={(e) => setClosingHours(e.target.value)}
                             className="border rounded-md px-3 py-2 w-full"
                             required
                         />
@@ -249,11 +310,51 @@ const Bar_management = () => {
                             required
                         />
                     </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
+                        <input
+                            type="file"
+                            onChange={(e) => setImage(e.target.files[0])}
+                            className="border rounded-md px-3 py-2 w-full"
+                            required
+                        />
+                    </div>
                     <button type="submit" className="bg-blue-500 text-white p-2 rounded">Submit</button>
                 </form>
+
+                <div className='flex flex-wrap'>
+                    {bars.map(bar => (
+                        <div key={bar._id} className='w-full sm:w-1/2 px-2 mb-4'>
+                            <div className='bg-gray-200 p-4 rounded-lg'>
+                                
+                                    <div key={bar._id} className="mb-4">
+                                        <Card
+                                            userId={userData._id}
+                                            barId={bar._id}
+                                            name={bar.name}
+                                            image={`http://localhost:3000/${bar.image}`}
+                                            rating={bar.rating}
+                                            tags={bar.types.map((tag) => tag.name)}
+                                            hours={`${bar.opening_hours} - ${bar.closing_hours}`}
+                                            address={bar.location}
+                                            description={bar.description}
+                                            numRating={bar.numRating}
+                                        />
+                                    </div>
+                                
+                                <button onClick={() => handleDeleteBar(bar._id)} className="bg-red-500 text-white p-2 rounded mt-2 w-full">
+                                    Delete Bar
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+
             </div>
 
             <ToastContainer />
+            <Footer />
         </div>
     );
 }

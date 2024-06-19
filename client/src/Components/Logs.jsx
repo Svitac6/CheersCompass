@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './Footer';
 
 export const Logs = () => {
     const navigate = useNavigate();
@@ -86,7 +87,9 @@ export const Logs = () => {
     }
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div>
+        <div className="relative w-full min-h-screen bg-gray-100 ">
+
             <Navbar />
             <ToastContainer /> {/* Toast container */}
             {isAdmin && (
@@ -120,8 +123,13 @@ export const Logs = () => {
                             </tbody>
                         </table>
                     </div>
+                    
                 </div>
+                
             )}
+             
+        </div>
+        <Footer />
         </div>
     );
 };
