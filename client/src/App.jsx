@@ -11,6 +11,7 @@ import Info from './Components/Info'
 import Logs from './Components/Logs'
 import Bar_management from './Components/Bar_management'
 
+
 function App() {
 
   
@@ -18,6 +19,7 @@ function App() {
 
   return (
     <>
+     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"></link>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />}></Route>

@@ -8,6 +8,9 @@ module.exports = {
       animation: {
         "text-reveal": "text-reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s",
       },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
       keyframes: {
         "text-reveal": {
           "0%": {

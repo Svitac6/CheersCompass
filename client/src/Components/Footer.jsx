@@ -54,17 +54,17 @@ const Footer = () => {
                     {/* Section des informations de contact */}
                     <div className="w-full md:w-1/4 text-center md:text-right">
                         <h2 className="text-lg font-semibold mb-4">Contact Us</h2>
-                        <p className="mb-2">1234 Street Name</p>
-                        <p className="mb-2">City, State, 12345</p>
-                        <p className="mb-2">Email: info@example.com</p>
-                        <p className="mb-2">Phone: (123) 456-7890</p>
+                        <p className="mb-2">96 rue du Coin De La Rue</p>
+                        <p className="mb-2">Reims</p>
+                        <p className="mb-2">Email: cheerscompass51@gmail.com</p>
+                        <p className="mb-2">Phone: +33 6.00.00.00.01</p>
                     </div>
                 </div>
 
                 {/* Section du copyright */}
                 <div className="mt-8 text-center">
                     <p className="text-sm text-gray-500">
-                        &copy; 2024 Your Company. All rights reserved.
+                        &copy; 2024 Tchin & co . All rights reserved.
                     </p>
                 </div>
             </div>
