@@ -10,6 +10,7 @@ import Profile from './Components/Profile'
 import Info from './Components/Info'
 import Logs from './Components/Logs'
 import Bar_management from './Components/Bar_management'
+import BarDetail from './Components/BarDetail'
 
 
 function App() {
@@ -33,7 +34,8 @@ function App() {
         <Route path="/info" element={<Info/>} ></Route>
         <Route path="/logs" element={<Logs/>}></Route>
         <Route path='/bar_manage' element={<Bar_management/>}></Route>
-      </Routes>
+        <Route path='/bar/:barId/' element={<BarDetail/>}></Route>
+        </Routes>
     </BrowserRouter>
 
 

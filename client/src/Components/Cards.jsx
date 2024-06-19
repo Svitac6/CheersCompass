@@ -8,6 +8,12 @@ const Card = ({ userId, barId, name, image, rating, tags, hours, address, descri
     const [isLiked, setIsLiked] = useState(false);
     const navigate = useNavigate();
 
+
+    const handleCardClick = () => {
+        // Naviguer vers la page détaillée du bar
+        navigate(`/bar/${barId}`);
+    };
+
     useEffect(() => {
         const checkIfLiked = async () => {
             try {
@@ -76,26 +82,29 @@ const Card = ({ userId, barId, name, image, rating, tags, hours, address, descri
     };
 
     return (
+
         <div className="bg-white shadow-md rounded-lg overflow-hidden transform transition-all duration-500 hover:scale-105">
-            <img src={image} alt={name} className="w-full h-48 object-cover object-center" />
-            <div className="p-4">
-                <div className="flex items-center mb-2">
-                    <div className="flex space-x-1 text-yellow-400">{renderStars()}</div>
-                    <div className="text-sm text-gray-600 ml-2">{numRating} note(s)</div>
-                </div>
-                <h2 className="text-xl font-semibold mb-2">{name}</h2>
-                <p className="text-gray-600 mb-2">{description}</p>
-                <p className="text-gray-600 mb-2">{hours}</p>
-                <p className="text-gray-600 mb-2">{address}</p>
-                <div className="flex justify-between items-center">
-                    <div className="flex space-x-2">
-                        {tags.map((tag, index) => (
-                            <span key={index} className="text-sm bg-gray-200 py-1 px-2 rounded-lg">{tag}</span>
-                        ))}
+            <div className=' cursor-pointer ' onClick={handleCardClick}>
+                <img src={image} alt={name} className="w-full h-48 object-cover object-center" />
+                <div className="p-4">
+                    <div className="flex items-center mb-2">
+                        <div className="flex space-x-1 text-yellow-400">{renderStars()}</div>
+                        <div className="text-sm text-gray-600 ml-2">{numRating} note(s)</div>
                     </div>
-                    <button onClick={handleLike} className="text-red-500">
-                        <FaHeart className={`text-xl cursor-pointer ${isLiked ? 'text-red-500' : 'text-gray-500'}`} />
-                    </button>
+                    <h2 className="text-xl font-semibold mb-2">{name}</h2>
+                    <p className="text-gray-600 mb-2">{description}</p>
+                    <p className="text-gray-600 mb-2">{hours}</p>
+                    <p className="text-gray-600 mb-2">{address}</p>
+                    <div className="flex justify-between items-center">
+                        <div className="flex space-x-2">
+                            {tags.map((tag, index) => (
+                                <span key={index} className="text-sm bg-gray-200 py-1 px-2 rounded-lg">{tag}</span>
+                            ))}
+                        </div>
+                        <button onClick={handleLike} className="text-red-500">
+                            <FaHeart className={`text-xl cursor-pointer ${isLiked ? 'text-red-500' : 'text-gray-500'}`} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

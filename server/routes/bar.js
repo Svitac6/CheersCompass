@@ -247,6 +247,20 @@ router.get('/tags/:id', async (req, res) => {
     }
 });
 
+router.get('/bars/:id', async (req, res) => {
+    const { id } = req.params; // Récupère l'ID du bar depuis les paramètres de la requête
+
+    try {
+        const bar = await Bar.findById(id); // Recherche le bar par son ID dans la base de données
+        if (!bar) {
+            return res.status(404).json({ status: false, message: 'Bar not found' });
+        }
+        res.status(200).json({ status: true, data: bar }); // Retourne les données du bar trouvé
+    } catch (error) {
+        console.error('Error fetching bar by ID:', error);
+        res.status(500).json({ status: false, message: 'Failed to fetch bar' });
+    }
+});
 
 
 

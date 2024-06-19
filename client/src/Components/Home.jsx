@@ -100,7 +100,7 @@ const Home = () => {
                 >
                     <div className="text-center text-white">
                         <h1 className="text-5xl font-bold mb-4 animate-text-reveal">
-                            Trouve ton bar et bien plus encore
+                            Trouve ton bar <span className='text-[#DE8500]  font-semibold '>et bien plus encore</span>
                         </h1>
                         
                     </div>
